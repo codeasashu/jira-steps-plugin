@@ -24,6 +24,8 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.LogManager;
+import java.util.logging.ConsoleHandler;
 
 /**
  * Service to interact with jira instance/site.
@@ -34,10 +36,13 @@ public class JiraService {
 
   private final Site jiraSite;
   private final JiraEndPoints jiraEndPoints;
-  private static final Logger LOGGER = Logger.getLogger(JiraService.class.getName());
+  //private static final Logger LOGGER = Logger.getLogger(JiraService.class.getName());
 
   public JiraService(final Site jiraSite) {
     this.jiraSite = jiraSite;
+
+    Logger WebAppMainLogger = LogManager.getLogManager().getLogger("hudson.WebAppMain")
+    WebAppMainLogger.addHandler (new ConsoleHandler())
 
     final ConnectionPool CONNECTION_POOL = new ConnectionPool(5, 60, TimeUnit.SECONDS);
 
@@ -49,7 +54,7 @@ public class JiraService {
 
     final ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JodaModule());
-    LOGGER.log(Level.WARNING, "BaseURL: " + this.jiraSite.getUrl().toString());
+    WebAppMainLogger.log(Level.WARNING, "BaseURL: " + this.jiraSite.getUrl().toString());
     this.jiraEndPoints = new Retrofit.Builder().baseUrl(this.jiraSite.getUrl().toString())
         .addConverterFactory(JacksonConverterFactory.create(mapper))
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create()).client(httpClient).build()
