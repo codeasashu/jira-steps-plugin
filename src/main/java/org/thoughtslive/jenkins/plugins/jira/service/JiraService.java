@@ -41,8 +41,8 @@ public class JiraService {
   public JiraService(final Site jiraSite) {
     this.jiraSite = jiraSite;
 
-    Logger WebAppMainLogger = LogManager.getLogManager().getLogger("hudson.WebAppMain")
-    WebAppMainLogger.addHandler (new ConsoleHandler())
+    Logger WebAppMainLogger = LogManager.getLogManager().getLogger("hudson.WebAppMain");
+    WebAppMainLogger.addHandler(new ConsoleHandler());
 
     final ConnectionPool CONNECTION_POOL = new ConnectionPool(5, 60, TimeUnit.SECONDS);
 
