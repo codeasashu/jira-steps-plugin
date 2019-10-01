@@ -26,6 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.LogManager;
 import java.util.logging.ConsoleHandler;
+import com.squareup.okhttp.logging.HttpLoggingInterceptor;
+import com.squareup.okhttp.logging.Level;
 
 /**
  * Service to interact with jira instance/site.
@@ -51,6 +53,10 @@ public class JiraService {
         .readTimeout(jiraSite.getReadTimeout(), TimeUnit.MILLISECONDS)
         .connectionPool(CONNECTION_POOL)
         .retryOnConnectionFailure(true).addInterceptor(new SigningInterceptor(jiraSite)).build();
+
+    HttpLoggingInterceptor logging = new HttpLoggingInterceptor();  
+    logging.setLevel(Level.BODY);
+    httpClient.addInterceptor(logging);
 
     final ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JodaModule());
