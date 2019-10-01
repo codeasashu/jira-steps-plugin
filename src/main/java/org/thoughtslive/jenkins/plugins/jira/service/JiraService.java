@@ -46,6 +46,7 @@ public class JiraService {
 
     final ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JodaModule());
+    logger.printLn('JIRA Site url:'+ this.jiraSite.getUrl().toString());
     this.jiraEndPoints = new Retrofit.Builder().baseUrl(this.jiraSite.getUrl().toString())
         .addConverterFactory(JacksonConverterFactory.create(mapper))
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create()).client(httpClient).build()
