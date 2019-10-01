@@ -22,6 +22,8 @@ import org.thoughtslive.jenkins.plugins.jira.login.SigningInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Service to interact with jira instance/site.
@@ -32,6 +34,7 @@ public class JiraService {
 
   private final Site jiraSite;
   private final JiraEndPoints jiraEndPoints;
+  private static final Logger LOGGER = Logger.getLogger(JiraService.class.getName());
 
   public JiraService(final Site jiraSite) {
     this.jiraSite = jiraSite;
@@ -46,7 +49,7 @@ public class JiraService {
 
     final ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JodaModule());
-    logger.printLn('JIRA Site url:'+ this.jiraSite.getUrl().toString());
+    LOGGER.log(Level.WARNING, 'JIRA Site url:'+ this.jiraSite.getUrl().toString());
     this.jiraEndPoints = new Retrofit.Builder().baseUrl(this.jiraSite.getUrl().toString())
         .addConverterFactory(JacksonConverterFactory.create(mapper))
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create()).client(httpClient).build()
