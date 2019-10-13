@@ -1,5 +1,7 @@
 package org.thoughtslive.jenkins.plugins.jira.login;
 
+import static org.thoughtslive.jenkins.plugins.jira.util.Common.getLogger;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.IOException;
 import java.util.Base64;
@@ -8,6 +10,8 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.thoughtslive.jenkins.plugins.jira.Site;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * SigningInterceptor for Retrofit API.
@@ -25,11 +29,12 @@ public class SigningInterceptor implements Interceptor {
 
   @Override
   public Response intercept(Interceptor.Chain chain) throws IOException {
-
+    Logger logger = getLogger();
     if (jiraSite.getLoginType().equalsIgnoreCase(Site.LoginType.BASIC.name())) {
       String credentials = jiraSite.getUserName() + ":" + jiraSite.getPassword().getPlainText();
       String encodedHeader =
           "Basic " + new String(Base64.getEncoder().encode(credentials.getBytes()));
+      logger.log(Level.WARNING, "Auth Header: " + encodedHeader);
       Request requestWithAuthorization =
           chain.request().newBuilder().addHeader("Authorization", encodedHeader).build();
       return chain.proceed(requestWithAuthorization);
