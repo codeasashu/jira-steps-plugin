@@ -35,6 +35,7 @@ public class SigningInterceptor implements Interceptor {
       String encodedHeader =
           "Basic " + new String(Base64.getEncoder().encode(credentials.getBytes()));
       logger.log(Level.WARNING, "Auth Header: " + encodedHeader);
+      logger.log(Level.WARNING, "newlog");
       Request requestWithAuthorization =
           chain.request().newBuilder().addHeader("Authorization", encodedHeader).build();
       return chain.proceed(requestWithAuthorization);
